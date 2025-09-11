@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - ECHO{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Return Button -->
+        <div class="mb-4">
+            <a href="{{ url_for('blog.index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Posts
+            </a>
+        </div>
+
+        <article class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ post.title }}</h1>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <small class="text-muted">
+                            By {{ post.username }} • {{ post.created_at[:10] }} • 
+                            <i class="fas fa-clock"></i> {{ post.reading_time }} min read
+                        </small>
+                    </div>
+                    {% if session.user_id == post.user_id %}
+                        <div>
+                            <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" class="btn btn-sm btn-outline-primary me-2">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete({{ post.id }})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if post.tags %}
+                    <div class="mb-3">
+                        {% for tag in post.tags.split(',') %}
+                            <a href="{{ url_for('blog.posts_by_tag', tag=tag.strip()) }}" class="badge bg-secondary me-1">
+                                {{ tag.strip() }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="post-content blog-content">
+                    {{ post.content | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+        </article>
+
+        <!-- Version History -->
+        {% if versions %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Version History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="versionAccordion">
+                        {% for version in versions %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ version.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#collapse{{ version.id }}">
+                                        Version from {{ version.updated_at[:19] }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ version.id }}" class="accordion-collapse collapse" 
+                                     data-bs-parent="#versionAccordion">
+                                    <div class="accordion-body">
+                                        <h6>{{ version.title }}</h6>
+                                        <p>{{ version.content | replace('\n', '<br>') | safe }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Post Info</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Created:</strong> {{ post.created_at[:19] }}</p>
+                <p><strong>Updated:</strong> {{ post.updated_at[:19] }}</p>
+                <p><strong>Reading Time:</strong> {{ post.reading_time }} minutes</p>
+                <p><strong>Author:</strong> {{ post.username }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this post? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(postId) {
+    document.getElementById('deleteForm').action = "{{ url_for('blog.delete_post', post_id=0) }}".replace('0', postId);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run tests
+      run: |
+        pip install pytest
+        pytest
+      env:
+        FLASK_ENV: testing
+    
+    - name: Deploy to Heroku
+      if: success()
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "echo-blog-app"
+        heroku_email: "your-email@example.com"
+        appdir: "."
+        procfile: "web: gunicorn app:app"
+    
+    - name: Deploy to Railway
+      if: success()
+      uses: railway-app/railway-deploy@v1.0.0
+      with:
+        railway-token: ${{ secrets.RAILWAY_TOKEN }}
+        service: echo-blog-app
+    
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Posts tagged "{{ tag }}" - ECHO{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Return Button -->
+        <div class="mb-4">
+            <a href="{{ url_for('blog.index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Posts
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Posts tagged "{{ tag }}"</h2>
+        </div>
+
+        {% if posts %}
+            {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ post.summary }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    By {{ post.username }} • {{ post.created_at[:10] }} • 
+                                    <i class="fas fa-clock"></i> {{ post.reading_time }} min read
+                                </small>
+                            </div>
+                            <div>
+                                {% if post.tags %}
+                                    {% for post_tag in post.tags.split(',') %}
+                                        <a href="{{ url_for('blog.posts_by_tag', tag=post_tag.strip()) }}" 
+                                           class="badge {% if post_tag.strip() == tag %}bg-primary{% else %}bg-secondary{% endif %} me-1">
+                                            {{ post_tag.strip() }}
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <h4>No posts found</h4>
+                <p class="text-muted">No posts are tagged with "{{ tag }}".</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Browse by Tag</h5>
+            </div>
+            <div class="card-body">
+                <p>Currently viewing: <span class="badge bg-primary">{{ tag }}</span></p>
+                <a href="{{ url_for('blog.index') }}" class="btn btn-outline-primary w-100">View All Posts</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
