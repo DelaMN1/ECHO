@@ -28,6 +28,8 @@ def create_app(config_name=None):
     
     return app
 
+# Create the app instance for production
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     app.run(debug=True)
