@@ -89,25 +89,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Theme persistence
-    const themeToggle = document.querySelector('a[href*="toggle-theme"]');
-    if (themeToggle) {
+    // Theme persistence - client-side only
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (themeToggle && themeIcon) {
         themeToggle.addEventListener('click', function(e) {
-            // Add a small delay to allow the theme change to take effect
-            setTimeout(function() {
-                localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-            }, 100);
+            e.preventDefault();
+            
+            // Toggle theme immediately
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
         });
     }
 
-    // Load saved theme preference
+    // Load saved theme preference on page load
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme && savedTheme !== (document.body.classList.contains('dark-theme') ? 'dark' : 'light')) {
-        // Theme doesn't match saved preference, redirect to toggle
-        if (savedTheme === 'dark' && !document.body.classList.contains('dark-theme')) {
-            window.location.href = '/toggle-theme';
-        } else if (savedTheme === 'light' && document.body.classList.contains('dark-theme')) {
-            window.location.href = '/toggle-theme';
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        if (themeIcon) {
+            themeIcon.className = 'fas fa-sun';
+        }
+    } else {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        if (themeIcon) {
+            themeIcon.className = 'fas fa-moon';
         }
     }
 });

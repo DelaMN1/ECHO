@@ -134,10 +134,3 @@ def my_posts():
     conn.close()
     
     return render_template('blog/my_posts.html', posts=posts)
-
-@blog_bp.route('/toggle-theme')
-def toggle_theme():
-    current_theme = session.get('theme', 'light')
-    new_theme = 'dark' if current_theme == 'light' else 'light'
-    session['theme'] = new_theme
-    return redirect(request.referrer or url_for('blog.index'))
