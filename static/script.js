@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Theme icon initialization (theme class already set by immediate function)
     const savedTheme = localStorage.getItem('theme');
-    const themeIcon = document.getElementById('theme-icon');
     
     if (themeIcon) {
         if (savedTheme === 'dark') {
