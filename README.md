@@ -1,9 +1,7 @@
 # ECHO - Blog Web App
 
-[![CI/CD Pipeline](https://github.com/yourusername/echo-blog-app/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/echo-blog-app/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/flask-2.3.3-green.svg)](https://flask.palletsprojects.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ECHO is a modern, sophisticated CRUD blog web application built with Flask, featuring user authentication, post management, and special features like version history and weekly digest. The application showcases a beautiful, minimalist design with a sophisticated color palette and smooth animations.
 
@@ -41,26 +39,12 @@ ECHO is a modern, sophisticated CRUD blog web application built with Flask, feat
    pip install -r requirements.txt
    ```
 
-3. **Create sample data** (optional):
-   ```bash
-   python sample_data.py
-   ```
-   This creates sample users and posts for testing.
-
-4. **Run the application**:
+3. **Run the application**:
    ```bash
    python app.py
    ```
 
-5. **Open your browser** and navigate to `http://localhost:5000`
-
-## Default Sample Users
-
-After running `sample_data.py`, you can login with:
-
-- **Username**: `john_doe`, **Email**: `john@example.com`, **Password**: `password123`
-- **Username**: `jane_smith`, **Email**: `jane@example.com`, **Password**: `password123`
-- **Username**: `bob_wilson`, **Email**: `bob@example.com`, **Password**: `password123`
+4. **Open your browser** and navigate to `http://localhost:5000`
 
 ## Project Structure
 
@@ -68,8 +52,8 @@ After running `sample_data.py`, you can login with:
 ECHO/
 ├── app.py                 # Main Flask application
 ├── models.py              # Database models and operations
+├── config.py              # Application configuration
 ├── requirements.txt       # Python dependencies
-├── sample_data.py         # Script to create sample data
 ├── README.md             # This file
 ├── auth/                 # Authentication module
 │   ├── __init__.py
@@ -89,12 +73,17 @@ ECHO/
 │       ├── post.html     # Individual post view
 │       ├── create.html   # Create new post
 │       ├── edit.html     # Edit existing post
+│       ├── my_posts.html # User's posts
 │       ├── search.html   # Search results
 │       ├── tag.html      # Posts by tag
 │       └── digest.html   # Weekly digest
-└── static/               # Static files
-    ├── style.css         # Custom CSS with dark/light themes
-    └── script.js         # JavaScript for UI enhancements
+├── static/               # Static files
+│   ├── style.css         # Custom CSS with dark/light themes
+│   ├── script.js         # JavaScript for UI enhancements
+│   └── favicon.png       # Website favicon
+└── tests/                # Test files
+    ├── __init__.py
+    └── test_app.py       # Application tests
 ```
 
 ## Routes
@@ -171,50 +160,29 @@ ECHO/
 - ECHO uses Flask blueprints for modular organization
 - All forms use Flask-WTF for validation and CSRF protection
 - The database is automatically initialized when the app starts
-- Sample data can be created using the `sample_data.py` script
 - The app includes comprehensive error handling and user feedback
 
 ## Deployment
 
-### GitHub Actions CI/CD
-The project includes automated CI/CD pipelines:
-
-- **CI Pipeline** (`ci.yml`): Runs tests, linting, and builds on every push/PR
-- **Deploy Pipeline** (`deploy.yml`): Deploys to production on main branch
-
 ### Supported Platforms
-- **Heroku**: Use the included Procfile
-- **Railway**: Automatic deployment via GitHub Actions
-- **Docker**: Use the included Dockerfile
+- **Heroku**: Create a Procfile with `web: gunicorn app:app`
+- **Railway**: Deploy directly from GitHub
 - **VPS**: Deploy with gunicorn using the provided configuration
+- **Local Development**: Run with `python app.py`
 
 ### Environment Variables
 Create a `.env` file with:
 ```env
 FLASK_ENV=production
 SECRET_KEY=your-secret-key-here
-DATABASE_URL=your-database-url
 ```
 
 ## Development
 
-### Available Commands
-```bash
-make help          # Show all available commands
-make install       # Install dependencies
-make test          # Run tests
-make lint          # Run linting
-make format        # Format code
-make clean         # Clean temporary files
-make run           # Run development server
-make docker-build  # Build Docker image
-make docker-run    # Run Docker container
-```
-
 ### Testing
 ```bash
 # Run all tests
-make test
+pytest
 
 # Run with coverage
 pytest --cov=. --cov-report=html
@@ -225,14 +193,11 @@ pytest tests/test_app.py
 
 ### Code Quality
 ```bash
-# Format code
-make format
-
-# Run linting
-make lint
-
 # Check code style
 flake8 .
+
+# Format code (if you have black installed)
+black .
 ```
 
 ## Contributing
@@ -245,7 +210,7 @@ flake8 .
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open source and available under the MIT License.
 
 ## Future Enhancements
 
