@@ -3,50 +3,72 @@
 {% block title %}Login - ECHO{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="text-center">Login</h3>
+<div class="auth-shell">
+    <section class="auth-aside">
+        <div class="auth-kicker">
+            <i class="fas fa-wave-square"></i>
+            Editorial Platform
+        </div>
+        <h1 class="auth-title">Return to the stories that still have momentum.</h1>
+        <p class="auth-copy">ECHO now feels like a deliberate publishing workspace: clear hierarchy, calmer surfaces, and a writing flow that stops getting in your way.</p>
+
+        <div class="auth-points">
+            <div class="auth-point">
+                <strong>Drafts stay readable</strong>
+                <div class="small mt-1">Typography and spacing are tuned for long-form writing, not generic admin screens.</div>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.username.label(class="form-label") }}
-                        {{ form.username(class="form-control") }}
-                        {% if form.username.errors %}
-                            <div class="text-danger">
-                                {% for error in form.username.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control") }}
-                        {% if form.password.errors %}
-                            <div class="text-danger">
-                                {% for error in form.password.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary") }}
-                    </div>
-                </form>
-                
-                <div class="text-center mt-3">
-                    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
-                </div>
+            <div class="auth-point">
+                <strong>Structure stays consistent</strong>
+                <div class="small mt-1">The auth, reading, and composing surfaces now share one visual language.</div>
+            </div>
+            <div class="auth-point">
+                <strong>Less friction</strong>
+                <div class="small mt-1">Sign in, pick up your post, and continue from a UI that feels composed instead of assembled.</div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="auth-form-card">
+        <p class="eyebrow">Welcome Back</p>
+        <h2 class="mb-2">Login</h2>
+        <p class="text-muted mb-4">Use your username and password to enter your workspace.</p>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control", placeholder="Enter your username") }}
+                {% if form.username.errors %}
+                    <div class="text-danger mt-2">
+                        {% for error in form.username.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", placeholder="Enter your password") }}
+                {% if form.password.errors %}
+                    <div class="text-danger mt-2">
+                        {% for error in form.password.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+
+        <div class="auth-link-row mt-4">
+            <span class="text-muted">Need an account?</span>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary">Create one</a>
+        </div>
+    </section>
 </div>
 {% endblock %}

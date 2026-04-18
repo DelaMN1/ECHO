@@ -3,60 +3,71 @@
 {% block title %}Edit Post - ECHO{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <h3>Edit Post</h3>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        {{ form.title.label(class="form-label") }}
-                        {{ form.title(class="form-control") }}
-                        {% if form.title.errors %}
-                            <div class="text-danger">
-                                {% for error in form.title.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.content.label(class="form-label") }}
-                        {{ form.content(class="form-control", rows="10") }}
-                        {% if form.content.errors %}
-                            <div class="text-danger">
-                                {% for error in form.content.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="mb-3">
-                        {{ form.tags.label(class="form-label") }}
-                        {{ form.tags(class="form-control", placeholder="e.g., python, flask, web development") }}
-                        <div class="form-text">Separate tags with commas</div>
-                        {% if form.tags.errors %}
-                            <div class="text-danger">
-                                {% for error in form.tags.errors %}
-                                    <small>{{ error }}</small>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
-                        {{ form.submit(class="btn btn-primary") }}
-                    </div>
-                </form>
-            </div>
+<div class="editor-shell">
+    <section class="editor-panel">
+        <div class="card-header">
+            <p class="eyebrow">Revise</p>
+            <h2 class="mb-2">Edit Post</h2>
+            <p class="text-muted mb-0">Refine the piece without losing sight of structure, tone, or pacing.</p>
         </div>
-    </div>
+
+        <div class="card-body">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.title.label(class="form-label") }}
+                    {{ form.title(class="form-control", placeholder="Refine the title") }}
+                    {% if form.title.errors %}
+                        <div class="text-danger mt-2">
+                            {% for error in form.title.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.content.label(class="form-label") }}
+                    {{ form.content(class="form-control", rows="14") }}
+                    {% if form.content.errors %}
+                        <div class="text-danger mt-2">
+                            {% for error in form.content.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    {{ form.tags.label(class="form-label") }}
+                    {{ form.tags(class="form-control", placeholder="essay, product, design-system") }}
+                    <div class="form-text">Separate tags with commas. Keep the taxonomy tidy.</div>
+                    {% if form.tags.errors %}
+                        <div class="text-danger mt-2">
+                            {% for error in form.tags.errors %}
+                                <small>{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="editor-footer">
+                    <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="btn btn-secondary">Cancel</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <aside class="aside-panel">
+        <p class="eyebrow">Revision Notes</p>
+        <h5>Use editing to sharpen, not to over-decorate.</h5>
+        <ul class="aside-list mt-3">
+            <li>Keep the opening sentence clear enough to hold attention immediately.</li>
+            <li>Trim sections that repeat the same thought in softer language.</li>
+            <li>Update tags only when the post’s actual topic has shifted.</li>
+        </ul>
+    </aside>
 </div>
 {% endblock %}

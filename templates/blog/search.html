@@ -1,73 +1,66 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
-{% block title %}Search Results - ECHO{% endblock %}
+{% block title %}Search Results - {{ app_name }}{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8">
-        <!-- Return Button -->
-        <div class="mb-4">
-            <a href="{{ url_for('blog.index') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Back to Posts
-            </a>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Search Results for "{{ query }}"</h2>
+<div class="browse-shell">
+    <section class="browse-main content-stack">
+        <div class="browse-hero browse-hero--search">
+            <p class="eyebrow mb-2">Archive Search</p>
+            <h1 class="section-title">Search Results{% if query %} for "{{ query }}"{% endif %}</h1>
+            <p class="section-copy">{{ posts|length }} result{{ '' if posts|length == 1 else 's' }} pulled from titles, summaries, content, and tags.</p>
         </div>
 
         {% if posts %}
-            {% for post in posts %}
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="text-decoration-none">
-                                {{ post.title }}
-                            </a>
-                        </h5>
-                        <p class="card-text">{{ post.summary }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <small class="text-muted">
-                                    By {{ post.username }} • {{ post.created_at[:10] }} • 
-                                    <i class="fas fa-clock"></i> {{ post.reading_time }} min read
-                                </small>
+            <div class="story-rail story-rail--single">
+                {% for post in posts %}
+                    <article class="story-card story-card--search">
+                        <div class="story-card__body">
+                            <div class="story-meta-row">
+                                <span class="story-author">{{ post.author.username }}</span>
+                                <span class="story-meta">{{ post.created_at|dateonly }} &middot; {{ post.reading_time }} min read</span>
                             </div>
-                            <div>
-                                {% if post.tags %}
-                                    {% for tag in post.tags.split(',') %}
-                                        <a href="{{ url_for('blog.posts_by_tag', tag=tag.strip()) }}" class="badge bg-secondary me-1">
-                                            {{ tag.strip() }}
-                                        </a>
+                            <h3 class="story-title">
+                                <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="text-decoration-none">{{ post.title }}</a>
+                            </h3>
+                            <p class="story-summary">{{ post.summary }}</p>
+                            <div class="story-footer">
+                                <div class="story-tags">
+                                    {% for tag in post.tags %}
+                                        <a href="{{ url_for('blog.posts_by_tag', slug=tag.slug) }}" class="badge bg-secondary me-1">{{ tag.name }}</a>
                                     {% endfor %}
-                                {% endif %}
+                                </div>
+                                <a href="{{ url_for('blog.view_post', post_id=post.id) }}" class="story-link">Read piece <i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            {% endfor %}
+                    </article>
+                {% endfor %}
+            </div>
         {% else %}
-            <div class="text-center py-5">
+            <div class="empty-panel text-center py-5">
                 <h4>No posts found</h4>
-                <p class="text-muted">Try a different search term.</p>
+                <p class="text-muted">Try a tighter phrase, a broader concept, or a tag you know exists.</p>
             </div>
         {% endif %}
-    </div>
+    </section>
 
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h5>Search Again</h5>
-            </div>
-            <div class="card-body">
-                <form method="GET" action="{{ url_for('blog.search') }}">
-                    <div class="mb-3">
-                        <input class="form-control" type="search" name="query" placeholder="Search posts..." value="{{ query }}">
-                    </div>
-                    <button class="btn btn-primary w-100" type="submit">Search</button>
-                </form>
-            </div>
+    <aside class="sidebar-stack">
+        <div class="info-panel info-panel--accent">
+            <p class="eyebrow mb-2">Search Again</p>
+            <form method="GET" action="{{ url_for('blog.search') }}" class="stack-form mt-3">
+                <input class="form-control" type="search" name="query" placeholder="Search posts, ideas, tags" value="{{ query }}">
+                <button class="btn btn-primary w-100" type="submit">Search Archive</button>
+            </form>
         </div>
-    </div>
+
+        <div class="info-panel">
+            <p class="eyebrow mb-2">Search Tips</p>
+            <ul class="aside-list">
+                <li>Use one strong noun first. Broad phrases tend to blur results.</li>
+                <li>Tags work well here, especially for recurring themes.</li>
+                <li>Search spans titles, summaries, full content, and tag names.</li>
+            </ul>
+        </div>
+    </aside>
 </div>
 {% endblock %}
